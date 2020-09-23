@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>StepItExamSlider</title>
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+			<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+		<style>
+			#slider {
+				width: 88%;
+				height: 88vh;
+				margin: 30px auto;
+				position: relative;
+				overflow: hidden;
+				border-radius: 20px;
+				box-shadow: 0 0 30px black;
+			}
+			#card-text {
+				position: absolute;
+				bottom: 10%;
+				left: 5%;
+			}
+			#card-text p{
+				background: rgba(134, 4, 4, 0.26);
+				padding: 10px;
+				color:#fff;
+			}
+			#card-text h1{
+				padding-right: 10px;
+				color:#fff;
+			}
+			#box {
+				position: absolute;
+				display: flex;
+			}
+			#thumbs {
+				display: flex;
+				flex-direction: reverse;
+				flex-wrap:nowrap;
+				position: absolute;
+				bottom: 10px;
+				right: 5px;
+				
+			}
+			#number {
+				display: flex;
+				flex-direction: row;
+				flex-wrap:nowrap;
+			
+			}
+			#number>div, #left, #right {
+				background: white;
+				font-size: 25px;
+				text-align: center;
+				width: 30px;
+				height: 30px;
+				border: 20px solid #white;
+				border-radius: 3px;
+				box-shadow: 0 0 30px white;
+				margin: 0 2px;
+				cursor: pointer;
+			}
+			#number>i {
+				color: white;
+			}
+			#thumbs>img:hover {
+				opacity: .5;
+			}
+			</style>
+		</head>
+		<body>
+			<div id="slider">
+				<div id="box">
+				</div>
+					<div id="thumbs">
+						<div id="left"><</div>
+						<div id="number"><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px"></i></div>
+						<div id="right">></div>
+				</div>
+			</div>	
+			<script>
+			$(document).ready( function(){
+				let  slider;
+				let images = ["image1.jpg","image2.jpg","image3.jpg","image4.jpg","image5.jpg"];
+				let imgtags = images.map(item=>'<img src="img/'+item+'" />');
+				let width;
+				let height;
+				let t;
+				let dest = 0;
+				
+				createList();
+				$("#box").append(imgtags);
+				function createList(){
+						for( i=1; i <=images.length; i++ ){
+						$("#number").append('<div>'+i+'</div>');
+						}	
+					}
+					    function content() {
+							let kod = "";
+							kod += '<h1>' + cardTxt[inc].h1 + '</h1>';
+							kod += '<p>' + cardTxt[inc].p + '</p>';
+							console.log(cardTxt[inc].h1);
+							cardText.innerHTML = kod;
+							console.log(cardText)
+						}
+				$("#thumbs>img").click(function(){
+					dest = $(this).index()-1;
+					start();
+				});
+				$("#number>div").click(function(){
+					dest = $(this).index();
+					start();
+				  });
+
+					$("#right").click(function(){
+					  dest++;
+					  start();
+					})
+				   
+					$("#left").click(function(){
+					  dest--;
+					  start();
+					})
+
+				
+				$(window).on('resize', init);
+				init();
+				start();
+				
+				function start(){
+					stop();
+					slide();
+					t = setInterval(()=>{
+						dest++;
+						slide();
+					} ,3000);
+				}
+				function stop(){
+					clearInterval(t);
+				}
+				function slide(){
+					if(dest > images.length - 1) dest = 0;
+					$("#box").animate({left: -1 * dest * width}, 500);
+				}
+				function init() {
+					width = $("#slider").width();
+					height = $("#slider").height();
+					$("#box").css({
+							width: width * images.length
+						})
+					$("#box>img").css({
+						width: width,
+						height: height,
+						objectFit: 'cover'
+					});
+				}
+				$(document).ready( function(){
+            let  slider;
+            loadDoc("slider.json", openJson);
+            function loadDoc(url, cFunction) {
+              let xhttp = new XMLHttpRequest();
+              xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                  cFunction(this);
+                }
+              };
+              xhttp.open("GET", url, true);
+              xhttp.send();
+            }
+
+ 
+
+            function openJson(xml) {
+              slider = JSON.parse(xml.responseText);
+              console.log(slider)
+            }
+        })
+			});
+			
+			
+		</script>
+	</body>
+</html>
